@@ -17,10 +17,15 @@ defmodule PhoenixLibrary.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/search", PageController, :index
+
+    resources "/books", BookController, except: [:create, :update, :delete]
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", PhoenixLibrary do
+  # scope "/api", PhoenixLibrary.Api, as: :api do
   #   pipe_through :api
+
+  #   resources "/books", BookController, except: [:new, :edit]
   # end
+
 end
