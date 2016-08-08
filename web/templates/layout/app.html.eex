@@ -7,18 +7,15 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello PhoenixLibrary!</title>
+    <title>Phoenix Library</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
   <body>
-    <div class="container">
-
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
-
-    </div> <!-- /container -->
+    <header class="site-header">Phoenix Library</header>
+    <main class="wrapper" role="main">
+      <%= render @view_module, @view_template, assigns %>
+    </main> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

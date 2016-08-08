@@ -1,8 +1,9 @@
-module Search.Input exposing (..)
+module Common.Input exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import List
 
 
 -- Model
@@ -36,10 +37,12 @@ update msg model =
 -- View
 
 
-view : Model -> Html Msg
-view model =
+view : List (Attribute Msg) -> Model -> Html Msg
+view attr model =
     input
-        [ onInput Input
-        , type' "text"
-        ]
+        (List.append attr
+            [ onInput Input
+            , type' "text"
+            ]
+        )
         [ text model ]
