@@ -5,7 +5,6 @@ defmodule PhoenixLibrary.PageController do
   alias PhoenixLibrary.Book
 
   def index(conn, _params) do
-    # json(conn, Book |> Repo.all)
     render conn, "index.html"
   end
 end
