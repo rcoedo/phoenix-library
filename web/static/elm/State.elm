@@ -6,6 +6,7 @@ import Dict exposing (Dict)
 import Types exposing (..)
 import Phoenix exposing (phxInit)
 import Routing exposing (routeFromResult)
+import Debug
 
 
 init : Result String Route -> ( Model, Cmd Msg )

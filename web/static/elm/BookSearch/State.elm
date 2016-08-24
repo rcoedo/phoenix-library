@@ -32,7 +32,7 @@ getResults : Dict Int Book -> String -> List Book
 getResults books query =
     books
         |> Dict.values
-        |> List.filter (filterElement [ authorString, .title, .isbn ] query)
+        |> List.filter (filterElement [ authorString, .title, .isbn, .publisher ] query)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

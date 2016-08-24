@@ -34,7 +34,7 @@ inputView : Model -> Html Msg
 inputView model =
     input
         [ class "book-search__input"
-        , placeholder "Search an Isbn, Title or Author..."
+        , placeholder "Search an isbn, title, publisher or author..."
         , onInput Input
         , type' "text"
         ]

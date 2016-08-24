@@ -5,14 +5,25 @@ import Json.Encode as Encode
 import Book.Types exposing (..)
 
 
+bookDetailsDecoder : Decoder BookDetails
+bookDetailsDecoder =
+    Decode.object4 BookDetails
+        ("description" := Decode.string)
+        ("epub" := Decode.string)
+        ("mobi" := Decode.string)
+        ("pdf" := Decode.string)
+
+
 bookDecoder : Decoder Book
 bookDecoder =
-    Decode.object5 Book
+    Decode.object7 Book
         ("id" := Decode.int)
         ("title" := Decode.string)
         ("isbn" := Decode.string)
-        ("thumbnail" := Decode.string)
         ("author" := Decode.list Decode.string)
+        ("publisher" := Decode.string)
+        ("thumbnail" := Decode.string)
+        (Decode.maybe ("details" := bookDetailsDecoder))
 
 
 bookListDecoder : Decoder (List Book)
