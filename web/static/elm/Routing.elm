@@ -9,7 +9,8 @@ import Types exposing (..)
 matchers : Parser (Route -> a) a
 matchers =
     oneOf
-        [ oneOf [ (s ""), (s "home") ] |> format BookSearchRoute
+        [ format BookSearchRoute (oneOf [ s "", s "home" ])
+        , format BookRoute (s "book" </> int)
         ]
 
 

@@ -1,11 +1,13 @@
 module State exposing (..)
 
-import BookSearch.State
+import Pages.BookSearch.State as BookSearchState
+import Pages.BookDetails.State as BookDetailsState
 import Phoenix.Socket as Socket
 import Dict exposing (Dict)
 import Types exposing (..)
 import Phoenix exposing (phxInit)
 import Routing exposing (routeFromResult)
+import Init exposing (books)
 import Debug
 
 
@@ -13,13 +15,14 @@ init : Result String Route -> ( Model, Cmd Msg )
 init result =
     let
         currentRoute =
-            routeFromResult result
+            result |> routeFromResult
 
         ( phxSocket, phxCmd ) =
             phxInit currentRoute
 
         model =
-            { searchPageModel = BookSearch.State.init
+            { searchPageModel = BookSearchState.init
+            , detailsPageModel = BookDetailsState.init
             , books = Dict.fromList []
             , route = currentRoute
             , phxSocket = phxSocket
@@ -34,6 +37,20 @@ init result =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
+        LoadBook book ->
+            case book of
+                Just book ->
+                    ( { model
+                        | books =
+                            model.books
+                                |> Dict.insert book.id book
+                      }
+                    , Cmd.none
+                    )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
         LoadBooks books ->
             ( { model
                 | books =
@@ -44,16 +61,22 @@ update message model =
             , Cmd.none
             )
 
+        UpdateBook book ->
+            model |> Debug.log "UPDATE BOOK"
+
         BookSearchMsg msg ->
             let
                 ( searchPageModel, searchPageCmd ) =
-                    BookSearch.State.update msg model.searchPageModel
+                    BookSearchState.update msg model.searchPageModel
             in
-                ( { model | searchPageModel = searchPageModel }, Cmd.none )
+                ( { model | searchPageModel = searchPageModel }, Cmd.map BookSearchMsg searchPageCmd )
 
-        JoinAllBooksChannel ->
-            Debug.log "Joined to books:*"
-                ( model, Cmd.none )
+        BookDetailsMsg msg ->
+            let
+                ( detailsPageModel, detailsPageCmd ) =
+                    BookDetailsState.update msg model.detailsPageModel
+            in
+                ( { model | detailsPageModel = detailsPageModel }, Cmd.map BookDetailsMsg detailsPageCmd ) |> Debug.log "awesome!"
 
         PhoenixMsg msg ->
             let
@@ -64,10 +87,16 @@ update message model =
                 , Cmd.map PhoenixMsg phxCmd
                 )
 
+        _ ->
+            ( model, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Socket.listen model.phxSocket PhoenixMsg
+    Sub.batch
+        [ Socket.listen model.phxSocket PhoenixMsg
+        , books LoadBooks
+        ]
 
 
 urlUpdate : Result String Route -> Model -> ( Model, Cmd Msg )

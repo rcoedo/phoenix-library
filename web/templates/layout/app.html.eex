@@ -16,6 +16,9 @@
     <main class="wrapper" role="main">
       <%= render @view_module, @view_template, assigns %>
     </main> <!-- /container -->
+    <script>
+      var init = <%= raw(@init) %>;
+    </script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

@@ -6,6 +6,10 @@ defmodule PhoenixLibrary.Repo.Migrations.CreateBook do
       add :title, :string
       add :isbn, :string
       add :author, {:array, :string}
+      add :publisher, :string
+      add :description, :text
+      add :thumbnail, :string
+      add :link, :string
 
       timestamps()
     end

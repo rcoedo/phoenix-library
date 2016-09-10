@@ -4,33 +4,21 @@ defmodule PhoenixLibrary.BookChannel do
   alias PhoenixLibrary.Repo
   alias PhoenixLibrary.Book
 
-  @book_attr ~w(id title isbn thumbnail author publisher)a
-  @detailed_book_attr ~w(id title isbn thumbnail author publisher book_details)a
-
-  def join("book:*", _message, socket) do
-    send(self, :after_join)
+  def join("books:*", _message, socket) do
     {:ok, socket}
   end
 
-  def handle_info(:after_join, socket) do
-    push(socket, "join_all_books", %{books: get_books})
+  def join("books:" <> _book_id, _message, socket) do
+    {:ok, socket}
+  end
+
+  def handle_in("get_book", %{"id" => id}, socket) do
+    push(socket, "book", Book |> Repo.get(id))
     {:noreply, socket}
   end
 
-  defp get_books do
-    Book
-    |> Repo.all
-    |> Enum.map(converter(@book_attr))
-  end
-
-  defp get_detailed_books do
-    Book
-    |> Repo.all
-    |> Repo.preload(:book_details)
-    |> Enum.map(converter(@detailed_book_attr))
-  end
-
-  defp converter(attrs) do
-    fn (model) -> Map.take(model, attrs) end
+  def handle_in("get_books", _payload, socket) do
+    push(socket, "books", %{books: Book |> Repo.all})
+    {:noreply, socket}
   end
 end

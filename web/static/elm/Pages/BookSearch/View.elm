@@ -1,12 +1,12 @@
-module BookSearch.View exposing (..)
+module Pages.BookSearch.View exposing (..)
 
 import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Book.Types exposing (..)
-import BookSearch.Types exposing (..)
-import BookSearch.State exposing (..)
+import Pages.BookSearch.Types exposing (..)
+import Pages.BookSearch.State exposing (..)
 
 
 bookCardView : Book -> Html Msg
@@ -21,13 +21,15 @@ bookCardView book =
         ]
 
 
+bookListElView : Book -> Html Msg
+bookListElView book =
+    li [ class "book-list__item", onClick (BookClick book) ] [ bookCardView book ]
+
+
 bookListView : List Book -> Html Msg
 bookListView books =
     ul [ class "book-list" ]
-        (books
-            |> List.map bookCardView
-            >> List.map (\e -> li [ class "book-list__item" ] [ e ])
-        )
+        (books |> List.map bookListElView)
 
 
 inputView : Model -> Html Msg

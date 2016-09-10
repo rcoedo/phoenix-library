@@ -19,5 +19,7 @@ import "phoenix_html";
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
-const elmDiv = document.querySelector("#elm-container");
-const elmApp = Elm.App.embed(elmDiv);
+const div = document.querySelector("#elm-container");
+const app = Elm.App.embed(div);
+
+app.ports.books.send(window.init.books);

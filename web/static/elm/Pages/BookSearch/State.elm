@@ -1,9 +1,10 @@
-module BookSearch.State exposing (..)
+module Pages.BookSearch.State exposing (..)
 
 import Regex
 import Dict exposing (..)
-import BookSearch.Types exposing (..)
+import Pages.BookSearch.Types exposing (..)
 import Book.Types exposing (..)
+import Navigation
 
 
 init : Model
@@ -40,3 +41,6 @@ update message model =
     case message of
         Input value ->
             ( { model | inputModel = value }, Cmd.none )
+
+        BookClick book ->
+            ( model, Navigation.newUrl ("#book/" ++ (book.id |> toString)) )

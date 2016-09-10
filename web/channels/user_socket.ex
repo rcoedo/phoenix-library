@@ -2,7 +2,7 @@ defmodule PhoenixLibrary.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "book:*", PhoenixLibrary.BookChannel
+  channel "books:*", PhoenixLibrary.BookChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

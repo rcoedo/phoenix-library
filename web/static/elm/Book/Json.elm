@@ -5,35 +5,34 @@ import Json.Encode as Encode
 import Book.Types exposing (..)
 
 
-bookDetailsDecoder : Decoder BookDetails
-bookDetailsDecoder =
-    Decode.object4 BookDetails
-        ("description" := Decode.string)
-        ("epub" := Decode.string)
-        ("mobi" := Decode.string)
-        ("pdf" := Decode.string)
-
-
 bookDecoder : Decoder Book
 bookDecoder =
-    Decode.object7 Book
+    Decode.object8 Book
         ("id" := Decode.int)
         ("title" := Decode.string)
         ("isbn" := Decode.string)
         ("author" := Decode.list Decode.string)
         ("publisher" := Decode.string)
         ("thumbnail" := Decode.string)
-        (Decode.maybe ("details" := bookDetailsDecoder))
+        ("description" := Decode.string)
+        ("link" := Decode.string)
 
 
-bookListDecoder : Decoder (List Book)
-bookListDecoder =
+booksResponseDecoder : Decoder (List Book)
+booksResponseDecoder =
     Decode.object1 identity ("books" := (Decode.list bookDecoder))
 
 
-parseBooks : Encode.Value -> List Book
-parseBooks value =
+parseBooksResponse : Encode.Value -> List Book
+parseBooksResponse value =
     value
-        |> Decode.decodeValue bookListDecoder
+        |> Decode.decodeValue booksResponseDecoder
         |> Result.toMaybe
         |> Maybe.withDefault []
+
+
+parseBookResponse : Encode.Value -> Maybe Book
+parseBookResponse value =
+    value
+        |> Decode.decodeValue bookDecoder
+        |> Result.toMaybe
